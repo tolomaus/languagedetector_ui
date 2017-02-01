@@ -1,0 +1,12 @@
+logs
+target
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
+
+/conf/dev.conf
+/conf/local.conf
+/conf/generated.keystore

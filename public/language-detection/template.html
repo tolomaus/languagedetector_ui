@@ -1,0 +1,37 @@
+<p>.</p>
+<p>.</p>
+<div id="root">
+  <div class="container-fluid" style="max-width:1200px">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Language detection</h3>
+        <p ng-show="role == 'admin'" style="color: darkorange">{{ role }}</p>
+      </div>
+      <div class="panel-body">
+        <form name="loginForm" role="search">
+          <div class="form-group">
+            <div class="input-group" style="max-width:500px">
+              <input type="text" class="form-control" id="text" ng-model="$storage.text" placeholder="text" required autofocus>
+              <span class="input-group-btn">
+                <button class="btn btn-default" ng-click="translate()" ng-disabled="loginForm.$invalid">
+                  <i ng-hide="loading" class="glyphicon glyphicon-search"></i>
+                  <i ng-show="loading" class="fa fa-spinner fa-spin"></i>
+                  </button>
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <p ng-show="status.length" class="alert alert-warning"><strong>{{ status }}</strong></p>
+    <p ng-show="results.length == 0">No results found</p>
+    <div class="row" ng-repeat="sentence in sentences">
+      <div class="col-md-10">
+        {{ sentence.content }}
+      </div>
+      <div class="col-md-2">
+        {{ sentence.language }}
+      </div>
+    </div>
+  </div>
+</div>

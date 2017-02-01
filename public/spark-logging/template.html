@@ -1,0 +1,363 @@
+<p>.</p>
+<p>.</p>
+<div id="root" class="container-fluid" style="max-width:1200px">
+  <p ng-hide="businessLogs.length">No results found</p>
+  <div class="panel panel-default" ng-repeat="logLineWorkflow in businessLogs">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-4">
+          <h4 class="panel-title clickable">
+            <a data-toggle="collapse" data-target="#session-wf{{ $index }}">
+              <i class="fa fa-code-fork" aria-hidden="true"></i> <strong>{{ logLineWorkflow.message | limitTo:200
+              }}</strong>
+            </a>
+          </h4>
+        </div>
+        <div class="col-md-2">
+          <span class="label label-info">{{ logLineWorkflow.calcs.length }} calculation{{ logLineWorkflow.calcs.length > 1 ? 's' : '' }}</span>
+        </div>
+        <div class="col-md-2">
+          <i class="fa fa-warning warn"></i> <span class="badge">{{ logLineWorkflow.warnings }}</span>
+          <i class="fa fa-times-circle error"></i> <span class="badge">{{ logLineWorkflow.errors }}</span>
+        </div>
+        <div class="col-md-2">
+          {{ logLineWorkflow.startDate }}
+        </div>
+        <div class="col-md-2">
+          {{ logLineWorkflow.duration }}
+          <i
+                  class="fa {{ logLineWorkflow.state === 'SUCCESS' ? 'fa-stop' : (logLineWorkflow.state === 'FAILURE' ? 'fa-times-circle error' : 'fa-spinner fa-spin') }} pull-right"
+                  title="{{ logLineWorkflow.state }}"></i>
+        </div>
+      </div>
+    </div>
+    <div id="session-wf{{ $index }}" class="panel-body {{ $last ? '' : 'collapse' }}">
+      <dl ng-show="logLineWorkflow.options.length">
+        <dt><i class="fa fa-sliders" aria-hidden="true"></i></dt>
+        <dd>
+          <div class="row" ng-repeat="option in logLineWorkflow.options">
+            <div class="col-md-1">
+              {{ option[0] }}
+            </div>
+            <div class="col-md-1">
+              =
+            </div>
+            <div class="col-md-10">
+              {{ option[1] }}
+            </div>
+          </div>
+        </dd>
+      </dl>
+
+      <div class="panel panel-default" ng-repeat="logLineCalc in logLineWorkflow.calcs">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-md-8">
+              <h6 class="panel-title">
+                <i class="fa fa-calculator" aria-hidden="true"></i> <strong><em>{{ logLineCalc.module }}</em></strong>
+              </h6>
+            </div>
+            <div class="col-md-2">
+              {{ logLineCalc.startDate }}
+            </div>
+            <div class="col-md-2">
+              {{ logLineCalc.duration }}
+              <i
+                      class="fa {{ logLineCalc.state === 'SUCCESS' ? 'fa-stop' : (logLineCalc.state === 'FAILURE' ? 'fa-times-circle error' : 'fa-spinner fa-spin') }} pull-right"
+                      title="{{ logLineCalc.state }}"></i>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <dl ng-show="logLineCalc.options.length">
+            <dt>Options</dt>
+            <dd>
+              <div class="row" ng-repeat="option in logLineCalc.options">
+                <div class="col-md-1">
+                  {{ option[0] }}
+                </div>
+                <div class="col-md-1">
+                  =
+                </div>
+                <div class="col-md-10">
+                  {{ option[1] }}
+                </div>
+              </div>
+            </dd>
+          </dl>
+
+          <div class="panel panel-default" ng-show="logLineCalc.dataReads.length">
+            <div class="panel-heading">
+              <h6 class="panel-title">
+                <i class="fa fa-external-link" aria-hidden="true"></i> Data reads
+              </h6>
+            </div>
+            <ul class="list-group"
+                ng-repeat="dataRead in logLineCalc.dataReads">
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-md-1">
+                    {{ dataRead.storage }}
+                  </div>
+                  <div class="col-md-5"
+                       data-toggle="tooltip"
+                       title="{{ dataRead.tableName }}">
+                    {{ dataRead.tableName | limitTo:50 }}
+                  </div>
+                  <div class="col-md-4">
+                    <div ng-hide="dataRead.count == -1">size <strong>{{ dataRead.count }}</strong></div>
+                  </div>
+                  <div class="col-md-2">
+                    {{ dataRead.date }}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="panel panel-default" ng-show="logLineCalc.jobs.length">
+            <div class="panel-heading">
+              <h6 class="panel-title">
+                <i class="fa fa-cogs" aria-hidden="true"></i> Jobs
+              </h6>
+            </div>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-md-1">
+                    <strong><em>id</em></strong>
+                  </div>
+                  <div class="col-md-5">
+                    <strong><em>description</em></strong>
+                  </div>
+                  <div class="col-md-1">
+                    <strong><em>stages</em></strong>
+                  </div>
+                  <div class="col-md-1">
+                    <strong><em>SQL</em></strong>
+                  </div>
+                  <div class="col-md-2">
+                    <strong><em>start date</em></strong>
+                  </div>
+                  <div class="col-md-2">
+                    <strong><em>duration</em></strong>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item"
+                  ng-repeat="job in logLineCalc.jobs" ng-hide="job.description.endsWith('(meta data only)')">
+                <div class="row">
+                  <div class="col-md-1">
+                    <a target="_blank"
+                       href="http://cruncher.meetmatch.biz:18080/history/{{ logLineWorkflow.sparkAppId }}/jobs/job/?id={{ job.id }}">{{ job.id }}</a>
+                    <a ng-show="logLineWorkflow.state == 'BUSY'" target="_blank"
+                       href="http://cruncher.meetmatch.biz:4040/jobs/job/?id={{ job.id }}"><i class="fa fa-link" aria-hidden="true"></i></a>
+                  </div>
+                  <div class="col-md-5"
+                       data-toggle="tooltip"
+                       title="{{ job.description }}">
+                    {{ job.description | limitTo:50 }}
+                  </div>
+                  <div class="col-md-1">
+                    {{ job.stageCount }}
+                  </div>
+                  <div class="col-md-1">
+                    <div ng-hide="job.executionId == -1">
+                      <a target="_blank"
+                         href="http://cruncher.meetmatch.biz:18080/history/{{ logLineWorkflow.sparkAppId }}/SQL/execution/?id={{ job.executionId }}">{{ job.executionId }}</a>
+                      <a ng-show="logLineWorkflow.state == 'BUSY'" target="_blank"
+                         href="http://cruncher.meetmatch.biz:4040/SQL/execution/?id={{ job.executionId }}"><i class="fa fa-link" aria-hidden="true"></i></a>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    {{ job.startDate }}
+                  </div>
+                  <div class="col-md-2">
+                    {{ job.duration }}
+                    <i
+                            class="fa {{ job.state === 'SUCCESS' ? 'fa-stop' : (job.state === 'FAILURE' ? 'fa-times-circle error' : 'fa-spinner fa-spin') }} pull-right"
+                            title="{{ job.state }}"></i>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="panel panel-default" ng-show="logLineCalc.transactionCategories.length">
+            <div ng-repeat="transactionCategory in logLineCalc.transactionCategories">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col-md-3">
+                    <h6 class="panel-title clickable">
+                      <a data-toggle="collapse"
+                         data-target="#transaction-wf{{ $parent.$parent.$index }}-calc{{ $parent.$index }}-cat{{ $index }}">
+                        <i class="fa fa-exchange" aria-hidden="true"></i> {{ transactionCategory.category }}
+                      </a>
+                      <span class="badge">{{ transactionCategory.numberOfTransactions }}</span>
+                    </h6>
+                  </div>
+                  <div class="col-md-3">
+                    avg duration: {{ transactionCategory.averageFinishedTransactionDuration }}
+                  </div>
+                  <div class="col-md-6">
+                  </div>
+                </div>
+              </div>
+              <ul id="transaction-wf{{ $parent.$parent.$index }}-calc{{ $parent.$index }}-cat{{ $index }}"
+                  class="list-group collapse">
+                <li class="list-group-item">
+                  <div class="row">
+                    <div class="col-md-1">
+                      <strong><em>#</em></strong>
+                    </div>
+                    <div class="col-md-1">
+                      <strong><em>id</em></strong>
+                    </div>
+                    <div class="col-md-2">
+                      <strong><em>stage/part/task</em></strong>
+                    </div>
+                    <div class="col-md-4">
+                      <strong><em>message</em></strong>
+                    </div>
+                    <div class="col-md-2">
+                      <strong><em>start date</em></strong>
+                    </div>
+                    <div class="col-md-2">
+                      <strong><em>duration</em></strong>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item" ng-repeat="transaction in transactionCategory.transactions">
+                  <div class="row">
+                    <div class="col-md-1">
+                      {{ $index + 1 }}
+                    </div>
+                    <div class="col-md-1">
+                      {{ transaction.id }}
+                    </div>
+                    <div class="col-md-2">
+                      {{ transaction.stageId }}/{{ transaction.partitionId }}/{{ transaction.taskId }}
+                    </div>
+                    <div class="col-md-4">
+                      {{ transaction.message }}
+                    </div>
+                    <div class="col-md-2">
+                      {{ transaction.startDate }}
+                    </div>
+                    <div class="col-md-2">
+                      {{ transaction.duration }}
+                      <i class="fa {{ transaction.state === 'FINISHED' ? 'fa-stop' : 'fa-spinner fa-spin' }} pull-right"
+                         title="{{ transaction.state }}"></i>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panel panel-default messages" ng-show="logLineCalc.messages.length">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-md-3">
+                  <h6 class="panel-title clickable">
+                    <a data-toggle="collapse" data-target="#message-wf{{ $parent.$index }}-c{{ $index }}">
+                      <i class="fa fa-list" aria-hidden="true"></i> Messages
+                    </a>
+                    <span class="badge clickable" onclick="filterMessages()">{{ logLineCalc.messages.length }}</span>
+                  </h6>
+                </div>
+                <div class="col-md-2">
+                  <i class="fa fa-info-circle info"></i> <span class="badge badge-info clickable"
+                                                               onclick="filterMessages('info')">{{(logLineCalc.messages | filter : {category:'INFO'}).length }}</span>
+                  <i class="fa fa-warning warn"></i> <span class="badge badge-warn clickable"
+                                                           onclick="filterMessages('warn')">{{(logLineCalc.messages | filter : {category:'WARN'}).length }}</span>
+                  <i class="fa fa-times-circle error"></i> <span class="badge badge-error clickable"
+                                                                 onclick="filterMessages('error')">{{(logLineCalc.messages | filter : {category:'ERROR'}).length }}</span>
+                </div>
+                <div class="col-md-7">
+                </div>
+              </div>
+            </div>
+            <ul id="message-wf{{ $parent.$index }}-c{{ $index }}" class="list-group collapse">
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-md-1">
+                    <strong><em>#</em></strong>
+                  </div>
+                  <div class="col-md-2">
+                    <strong><em>subject</em></strong>
+                  </div>
+                  <div class="col-md-1">
+                    <strong><em>category</em></strong>
+                  </div>
+                  <div class="col-md-6">
+                    <strong><em>message</em></strong>
+                  </div>
+                  <div class="col-md-2">
+                    <strong><em>date</em></strong>
+                  </div>
+                </div>
+              </li>
+              <li class="list-group-item li-{{ message.category.toLowerCase() }}"
+                  ng-repeat="message in logLineCalc.messages">
+                <div class="row">
+                  <div class="col-md-1">
+                    {{ $index + 1 }}
+                  </div>
+                  <div class="col-md-2">
+                    {{ message.subject }}
+                  </div>
+                  <div class="col-md-1">
+                    <i
+                            class="fa {{ message.category === 'INFO' ? 'fa-info-circle' : (message.category === 'WARN' ? 'fa-warning' : 'fa-times-circle')}} {{ message.category.toLowerCase() }}"></i>
+                    {{ message.category }}
+                  </div>
+                  <div class="col-md-6">
+                    {{ message.message }}
+                  </div>
+                  <div class="col-md-2">
+                    {{ message.date }}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div class="panel panel-default" ng-show="logLineCalc.dataWrites.length">
+            <div class="panel-heading">
+              <h6 class="panel-title">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Data writes
+              </h6>
+            </div>
+            <ul class="list-group"
+                ng-repeat="dataWrite in logLineCalc.dataWrites">
+              <li class="list-group-item">
+                <div class="row">
+                  <div class="col-md-1">
+                    {{ dataWrite.storage }}
+                  </div>
+                  <div class="col-md-5">
+                    {{ dataWrite.tableName }}
+                  </div>
+                  <div class="col-md-2">
+                    <div ng-hide="dataWrite.countAfter == -1">size <strong>{{ dataWrite.countAfter }}</strong></div>
+                    <div ng-hide="dataWrite.countUpdated == -1 || dataWrite.countUpdated == null">updated <strong>{{
+                      dataWrite.countUpdated }}</strong>
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <div ng-hide="dataWrite.countAfter == -1">diff <strong>{{ dataWrite.countAfter -
+                      dataWrite.countBefore }}</strong></div>
+                  </div>
+                  <div class="col-md-2">
+                    {{ dataWrite.date }}
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

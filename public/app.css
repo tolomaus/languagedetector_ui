@@ -1,0 +1,110 @@
+/* app css stylesheet */
+
+.menu {
+    list-style: none;
+    border-bottom: 0.1em solid black;
+    margin-bottom: 2em;
+    padding: 0 0 0.5em;
+}
+
+.menu:before {
+    content: "[";
+}
+
+.menu:after {
+    content: "]";
+}
+
+.menu > li {
+    display: inline;
+}
+
+.menu > li:before {
+    content: "|";
+    padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+    content: "";
+    padding: 0;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+.btn-lookup {
+    font-size: 10px;
+    line-height: 0;
+}
+
+.progress {
+    margin-bottom: 0;
+}
+
+.progress-gradient {
+    background-image: linear-gradient(to right, #5cb85c, #d9534f);
+}
+
+/*.progress-bar-gradient {*/
+    /*box-shadow: 0px 0px 0px 2000px white;*/
+    /*background-image: none !important;*/
+    /*background-color: transparent !important;*/
+/*}*/
+
+#wordsModal .modal-dialog {
+    width: 95%;
+}
+
+#wordsBowModal .modal-dialog {
+    width: 95%;
+}
+
+#wordsW2vModal .modal-dialog {
+    width: 95%;
+}
+
+#webpagesForClusterBowModal .modal-dialog {
+    width: 80%;
+}
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+.legend li {
+    cursor: pointer;
+}
+
+.link {
+    stroke: #ccc;
+}
+
+.link:hover, .node circle:hover {
+    stroke: #ffd700;
+    stroke-width: 4;
+}
+
+.node circle:hover {
+    stroke-width: 2;
+}
+
+.node text, .link text {
+    pointer-events: none;
+    font: 11px sans-serif;
+}
+
+.node:hover text, .link:hover text {
+    font: 13px sans-serif;
+}
+
+path.line {
+    stroke: gray;
+    stroke-width: 2px;
+    stroke-linecap: round;
+}
+
+.hide {
+    display: none;
+}
+
