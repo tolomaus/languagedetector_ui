@@ -108,3 +108,22 @@ path.line {
     display: none;
 }
 
+.info {
+    color: #00529B;
+}
+
+.success {
+    color: #4F8A10;
+}
+
+.warn {
+    color: #fec21f;
+}
+
+.error {
+    color: #D8000C;
+}
+
+.fa-spin {
+    color: dodgerblue;
+}

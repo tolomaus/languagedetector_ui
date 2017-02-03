@@ -27,11 +27,11 @@ nano conf/test.conf
 
 From source:
 ```shell
-scripts/sbt_run.sh
+scripts/sbt_run.sh # this script uses the settings from conf/test.conf
 ```
 From a package:
 ```shell
 scripts/package_app.sh
 scripts/deploy_app.sh 1.0
-scripts/languagedetector start
+scripts/languagedetector start # this script uses the settings from conf/test.conf
 ```
