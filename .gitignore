@@ -9,4 +9,3 @@ target
 
 /conf/dev.conf
 /conf/local.conf
-/conf/generated.keystore
