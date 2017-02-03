@@ -11,6 +11,7 @@ load parquet file
 1] clone this repo
 ```shell
 git clone https://github.com/tolomaus/languagedetector_ui.git
+cd languagedetector_ui
 ```
 
 2] (optional) modify the environment variables from [settings.env](https://github.com/tolomaus/languagedetector_ui/tree/master/settings.env) to your needs
