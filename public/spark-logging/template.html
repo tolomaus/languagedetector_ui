@@ -149,9 +149,9 @@
                 <div class="row">
                   <div class="col-md-1">
                     <a target="_blank"
-                       href="http://cruncher.meetmatch.biz:18080/history/{{ logLineWorkflow.sparkAppId }}/jobs/job/?id={{ job.id }}">{{ job.id }}</a>
+                       href="http://localhost:18080/history/{{ logLineWorkflow.sparkAppId }}/jobs/job/?id={{ job.id }}">{{ job.id }}</a>
                     <a ng-show="logLineWorkflow.state == 'BUSY'" target="_blank"
-                       href="http://cruncher.meetmatch.biz:4040/jobs/job/?id={{ job.id }}"><i class="fa fa-link" aria-hidden="true"></i></a>
+                       href="http://localhost:4040/jobs/job/?id={{ job.id }}"><i class="fa fa-link" aria-hidden="true"></i></a>
                   </div>
                   <div class="col-md-5"
                        data-toggle="tooltip"
@@ -164,9 +164,9 @@
                   <div class="col-md-1">
                     <div ng-hide="job.executionId == -1">
                       <a target="_blank"
-                         href="http://cruncher.meetmatch.biz:18080/history/{{ logLineWorkflow.sparkAppId }}/SQL/execution/?id={{ job.executionId }}">{{ job.executionId }}</a>
+                         href="http://localhost:18080/history/{{ logLineWorkflow.sparkAppId }}/SQL/execution/?id={{ job.executionId }}">{{ job.executionId }}</a>
                       <a ng-show="logLineWorkflow.state == 'BUSY'" target="_blank"
-                         href="http://cruncher.meetmatch.biz:4040/SQL/execution/?id={{ job.executionId }}"><i class="fa fa-link" aria-hidden="true"></i></a>
+                         href="http://localhost:4040/SQL/execution/?id={{ job.executionId }}"><i class="fa fa-link" aria-hidden="true"></i></a>
                     </div>
                   </div>
                   <div class="col-md-2">

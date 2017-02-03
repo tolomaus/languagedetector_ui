@@ -32,7 +32,7 @@ class SparkLoggingController extends Controller with Secured {
 
   private def getBusinessLogsImpl(mostRecent: Int = 10, includeAllDetails: Boolean = false): Array[LogLineWorkflow] = {
     val dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    val logFilePath = "/tmp"
+    val logFilePath = Utils.getConfig("spark.log.dir")
     val regex = """businessLog_2.*\.log""".r
 
     logFilePath.toDirectory.files

@@ -1,4 +1,4 @@
-name := "languagedetector"
+name := "languagedetector_ui"
 
 version := "1.0"
 
