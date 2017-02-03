@@ -1,4 +1,4 @@
-# languagedetector_ui
+# language detector UI
 
 This repo contains a Play application that can detect the language of a text that is entered by the user, sentence by sentence. It can also show the log files of the Apache Spark application from [its companion repo](https://github.com/tolomaus/languagedetector.git)
 
