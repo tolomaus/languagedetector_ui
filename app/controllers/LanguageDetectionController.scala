@@ -15,7 +15,10 @@ class LanguageDetectionController @Inject()(sentenceExtractor: SentenceExtractor
 
   def detectLanguage(text: String): Action[AnyContent] =
     Authorized.async { request =>
-      val sentences = sentenceExtractor.convertTextToSentences(text).map(sentence => Sentence(sentence, languageDetector.detectLanguage(sentence)))
+      val sentences = sentenceExtractor
+        .convertTextToSentences(text)
+        .map(sentence => Sentence(sentence, languageDetector.detectLanguage(sentence)))
+
       Future.successful(Ok(Json.toJson(sentences)).as(JSON))
     }
 }
