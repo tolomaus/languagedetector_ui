@@ -24,9 +24,10 @@ nano conf/test.conf
 ```
 
 4] run the application:
+
 From source:
 ```shell
-scripts/sbt_run
+scripts/sbt_run.sh
 ```
 From a package:
 ```shell
