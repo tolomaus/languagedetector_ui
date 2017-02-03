@@ -14,9 +14,9 @@ git clone https://github.com/tolomaus/languagedetector_ui.git
 cd languagedetector_ui
 ```
 
-2] (optional) modify the environment variables from [settings.env](https://github.com/tolomaus/languagedetector_ui/tree/master/settings.env) to your needs
+2] (optional) modify the environment variables from [settings.sh](https://github.com/tolomaus/languagedetector_ui/tree/master/settings.sh) to your needs
 ```shell
-nano settings.env
+nano settings.sh
 ```
 
 3] (optional) modify the environment specific test.conf file to your needs:
