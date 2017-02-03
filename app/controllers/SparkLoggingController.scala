@@ -67,6 +67,7 @@ class SparkLoggingController extends Controller with Secured {
                 Some(t)
             }
           }
+          .filter { case (_, module, _, _) => module != "java.lang.Class.save" }
           .groupBy { case (_, module, _, _) => module }
           .flatMap { case (module, lines) =>
             Try {
