@@ -24,7 +24,7 @@
       </div>
     </div>
     <p ng-show="status.length" class="alert alert-warning"><strong>{{ status }}</strong></p>
-    <p ng-show="results.length == 0">No results found</p>
+    <p ng-show="sentences.length == 0">No results found</p>
     <div class="row" ng-repeat="sentence in sentences">
       <div class="col-md-10">
         {{ sentence.content }}

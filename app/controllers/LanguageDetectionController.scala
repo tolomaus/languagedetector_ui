@@ -8,6 +8,7 @@ import play.api.mvc.{Action, AnyContent, Controller}
 import services.pos.{LanguageDetector, SentenceExtractor}
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 @Singleton
 class LanguageDetectionController @Inject()(sentenceExtractor: SentenceExtractor, languageDetector: LanguageDetector) extends Controller with Secured {
@@ -15,10 +16,12 @@ class LanguageDetectionController @Inject()(sentenceExtractor: SentenceExtractor
 
   def detectLanguage(text: String): Action[AnyContent] =
     Authorized.async { request =>
-      val sentences = sentenceExtractor
-        .convertTextToSentences(text)
-        .map(sentence => Sentence(sentence, languageDetector.detectLanguage(sentence)))
+      Future {
+        val sentences = sentenceExtractor
+          .convertTextToSentences(text)
+          .map(sentence => Sentence(sentence, languageDetector.detectLanguage(sentence)))
 
-      Future.successful(Ok(Json.toJson(sentences)).as(JSON))
+        Ok(Json.toJson(sentences)).as(JSON)
+      }
     }
 }

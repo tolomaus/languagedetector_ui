@@ -23,8 +23,8 @@ angular.module('Dashboard.languageDetection', [])
         .then(response => {
           $scope.sentences = response.data
         }, response => {
-          $scope.status += "Failed to log in."
-          console.log('login server error ' + response.status)
+          $scope.status += "Failed to retrieve the data."
+          console.log('server error ' + response.status)
         })
         .finally(() => $scope.loading = false)
     }

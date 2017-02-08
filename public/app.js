@@ -11,6 +11,7 @@ angular.module('Dashboard', [
   'Dashboard.auth.logout',
   'Dashboard.menu',
   'Dashboard.languageDetection',
+  'Dashboard.languageDetectionAnalytics',
   'Dashboard.sparkLogging'
 ])
   .config(['$locationProvider', '$routeProvider', '$httpProvider', ($locationProvider, $routeProvider, $httpProvider) => {

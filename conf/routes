@@ -1,12 +1,13 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-POST        /api/login                     controllers.LoginController.login
-POST        /api/logout                    controllers.LoginController.logout
-GET         /api/language-detection        controllers.LanguageDetectionController.detectLanguage(text: String ?= "")
-GET         /api/spark-logging             controllers.SparkLoggingController.getBusinessLogs(mostRecent: Int = 10, includeAllDetails: Boolean = false)
+POST        /api/login                               controllers.LoginController.login
+POST        /api/logout                              controllers.LoginController.logout
+GET         /api/language-detection                  controllers.LanguageDetectionController.detectLanguage(text: String ?= "")
+GET         /api/language-detection-analytics        controllers.LanguageDetectionAnalyticsController.getDataset
+GET         /api/spark-logging                       controllers.SparkLoggingController.getBusinessLogs(mostRecent: Int = 10, includeAllDetails: Boolean = false)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /                              controllers.Assets.at(path="/public", file = "index.html")
-GET         /*file                         controllers.Assets.versioned(path="/public", file: Asset)
+GET         /                                        controllers.Assets.at(path="/public", file = "index.html")
+GET         /*file                                   controllers.Assets.versioned(path="/public", file: Asset)
 
