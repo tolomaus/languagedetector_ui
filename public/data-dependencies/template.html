@@ -4,13 +4,12 @@
   <div class="container-fluid" style="max-width:1200px">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">Language detection analytics</h3>
+        <h3 class="panel-title">Data dependencies</h3>
         <p ng-show="role == 'admin'" style="color: darkorange">{{ role }}</p>
       </div>
     </div>
     <p ng-show="status.length" class="alert alert-warning"><strong>{{ status }}</strong></p>
     <p ng-show="data.length == 0">No results found</p>
-    <canvas id="chart" class="chart chart-bar" chart-data="data" chart-labels="labels"> chart-series="series">
-    </canvas>
+    <div id="cy"></div>
   </div>
 </div>

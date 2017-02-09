@@ -5,6 +5,7 @@ POST        /api/login                               controllers.LoginController
 POST        /api/logout                              controllers.LoginController.logout
 GET         /api/language-detection                  controllers.LanguageDetectionController.detectLanguage(text: String ?= "")
 GET         /api/language-detection-analytics        controllers.LanguageDetectionAnalyticsController.getDataset
+GET         /api/data-dependencies                   controllers.DataDependenciesController.getDataset
 GET         /api/spark-logging                       controllers.SparkLoggingController.getBusinessLogs(mostRecent: Int = 10, includeAllDetails: Boolean = false)
 
 # Map static resources from the /public folder to the /assets URL path

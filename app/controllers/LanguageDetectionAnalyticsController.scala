@@ -11,8 +11,8 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, Controller}
 import utils.Utils
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @Singleton
 class LanguageDetectionAnalyticsController @Inject() extends Controller with Secured {
@@ -24,7 +24,7 @@ class LanguageDetectionAnalyticsController @Inject() extends Controller with Sec
         implicit val configuration = new Configuration()
         implicit val fs = FileSystem.get(configuration)
 
-        val path = Utils.getConfig("parquet.path") + "/SentenceCountsByLanguage/*"
+        val path = Utils.getConfig("spark.content") + "/parquet/SentenceCountsByLanguage/*"
         logger.info(s"Loading the sentence counts from file $path...")
 
         val sentenceCountsByLanguage = ParquetSource(new Path(path))
