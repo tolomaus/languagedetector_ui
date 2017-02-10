@@ -187,7 +187,7 @@
             <div ng-repeat="transactionCategory in logLineCalc.transactionCategories">
               <div class="panel-heading">
                 <div class="row">
-                  <div class="col-md-3">
+                  <div class="col-md-6">
                     <h6 class="panel-title clickable">
                       <a data-toggle="collapse"
                          data-target="#transaction-wf{{ $parent.$parent.$index }}-calc{{ $parent.$index }}-cat{{ $index }}">
@@ -199,7 +199,7 @@
                   <div class="col-md-3">
                     avg duration: {{ transactionCategory.averageFinishedTransactionDuration }}
                   </div>
-                  <div class="col-md-6">
+                  <div class="col-md-3">
                   </div>
                 </div>
               </div>

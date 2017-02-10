@@ -78,9 +78,9 @@ class SparkLoggingController extends Controller with Secured {
                   (date, event, values.drop(1))
                 }
 
-              val (startDate, options, sparkAppId) = calcLines
+              calcLines
                 .find { case (_, event, _) => event == "START" }
-                .map { case (date, _, values) =>
+                .map { case (startDate, _, values) =>
                   val options = values(0)
                     .split(",")
                     .filterNot(_.isEmpty)
@@ -91,45 +91,10 @@ class SparkLoggingController extends Controller with Secured {
 
                   val sparkAppId = values(1)
 
-                  (date, options, sparkAppId)
-                }
-                .get
-
-              val (stopDate, state) = calcLines
-                .find { case (_, event, _) => event == "STOP" }
-                .map { case (date, _, values) =>
-                  val state = values(0)
-
-                  (date, state)
-                }
-                .getOrElse((Calendar.getInstance.getTime, "BUSY"))
-
-              val duration = Utils.formatDuration(Utils.getDuration(startDate, stopDate))
-
-              val jobs = lines
-                .filter { case (_, _, subject, _) => subject == "JOB" }
-                .map { case (date, _, _, values) =>
-                  val jobId = values(0).toInt
-                  val event = values(1)
-                  (date, jobId, event, values.drop(2))
-                }
-                .groupBy { case (date, jobId, event, values) => jobId }
-                .map { case (jobId, linesForJobId) =>
-                  val (startDate, jobDescription, stageCount, executionId) = linesForJobId
-                    .find { case (_, _, event, _) => event == "START" }
-                    .map { case (date, _, _, values) =>
-                      val jobDescription = values(0)
-                      val stageCount = values(1).toInt
-                      val executionId = if (values(2) != "") values(2).toInt else -1
-
-                      (date, jobDescription, stageCount, executionId)
-                    }
-                    .get
-
-                  val (stopDate, state) = linesForJobId
-                    .find { case (_, _, event, _) => event == "STOP" }
-                    .map { case (date, _, _, values) =>
-                      val state = values.head
+                  val (stopDate, state) = calcLines
+                    .find { case (_, event, _) => event == "STOP" }
+                    .map { case (date, _, values) =>
+                      val state = values(0)
 
                       (date, state)
                     }
@@ -137,110 +102,143 @@ class SparkLoggingController extends Controller with Secured {
 
                   val duration = Utils.formatDuration(Utils.getDuration(startDate, stopDate))
 
-                  LogLineJob(jobId, dateFormat.format(startDate), duration, state, jobDescription, stageCount, executionId)
-                }
-                .toArray
-                .sortBy(_.id)
-
-              val categoriesWithTransactions = lines
-                .filter { case (_, _, subject, _) => subject == "TRANSACTION" }
-                .map { case (date, _, _, values) =>
-                  val category = values(0)
-                  val id = values(1)
-                  val event = values(2)
-                  (date, category, id, event, values.drop(3))
-                }
-                .groupBy { case (_, category, id, _, _) => (category, id) }
-                .map { case ((category, id), linesForTransaction) =>
-                  val (startDate, stageId, partitionId, taskId, message) = linesForTransaction
-                    .find { case (_, _, _, event, _) => event == "START" }
-                    .map { case (date, _, _, _, values) =>
-                      val stageId = values(0).toInt
-                      val partitionId = values(1).toInt
-                      val taskId = values(2).toLong
-                      val message = values(3)
-                      (date, stageId, partitionId, taskId, message)
+                  val jobs = lines
+                    .filter { case (_, _, subject, _) => subject == "JOB" }
+                    .map { case (date, _, _, values) =>
+                      val jobId = values(0).toInt
+                      val event = values(1)
+                      (date, jobId, event, values.drop(2))
                     }
-                    .get
+                    .groupBy { case (date, jobId, event, values) => jobId }
+                    .map { case (jobId, linesForJobId) =>
+                      val (startDate, jobDescription, stageCount, executionId) = linesForJobId
+                        .find { case (_, _, event, _) => event == "START" }
+                        .map { case (date, _, _, values) =>
+                          val jobDescription = values(0)
+                          val stageCount = values(1).toInt
+                          val executionId = if (values(2) != "") values(2).toInt else -1
 
-                  val stopDateO = linesForTransaction
-                    .find { case (_, _, _, event, _) => event == "STOP" }
-                    .map { case (date, _, _, _, _) => date }
+                          (date, jobDescription, stageCount, executionId)
+                        }
+                        .get
 
-                  val state = stopDateO.map(_ => "FINISHED").getOrElse("BUSY")
-                  val duration = Utils.formatDuration(Utils.getDuration(startDate, stopDateO.getOrElse(Calendar.getInstance.getTime)))
+                      val (stopDate, state) = linesForJobId
+                        .find { case (_, _, event, _) => event == "STOP" }
+                        .map { case (date, _, _, values) =>
+                          val state = values.head
 
-                  LogLineTransaction(category, id, stageId, partitionId, taskId, message, dateFormat.format(startDate), duration, state)
+                          (date, state)
+                        }
+                        .getOrElse((Calendar.getInstance.getTime, "BUSY"))
+
+                      val duration = Utils.formatDuration(Utils.getDuration(startDate, stopDate))
+
+                      LogLineJob(jobId, dateFormat.format(startDate), duration, state, jobDescription, stageCount, executionId)
+                    }
+                    .toArray
+                    .sortBy(_.id)
+
+                  val categoriesWithTransactions = lines
+                    .filter { case (_, _, subject, _) => subject == "TRANSACTION" }
+                    .map { case (date, _, _, values) =>
+                      val category = values(0)
+                      val id = values(1)
+                      val event = values(2)
+                      (date, category, id, event, values.drop(3))
+                    }
+                    .groupBy { case (_, category, id, _, _) => (category, id) }
+                    .map { case ((category, id), linesForTransaction) =>
+                      val (startDate, stageId, partitionId, taskId, message) = linesForTransaction
+                        .find { case (_, _, _, event, _) => event == "START" }
+                        .map { case (date, _, _, _, values) =>
+                          val stageId = values(0).toInt
+                          val partitionId = values(1).toInt
+                          val taskId = values(2).toLong
+                          val message = values(3)
+                          (date, stageId, partitionId, taskId, message)
+                        }
+                        .get
+
+                      val stopDateO = linesForTransaction
+                        .find { case (_, _, _, event, _) => event == "STOP" }
+                        .map { case (date, _, _, _, _) => date }
+
+                      val state = stopDateO.map(_ => "FINISHED").getOrElse("BUSY")
+                      val duration = Utils.formatDuration(Utils.getDuration(startDate, stopDateO.getOrElse(Calendar.getInstance.getTime)))
+
+                      LogLineTransaction(category, id, stageId, partitionId, taskId, message, dateFormat.format(startDate), duration, state)
+                    }
+                    .groupBy(_.category)
+                    .mapValues(_.toArray)
+
+                  val transactionCategories = categoriesWithTransactions
+                    .map { case (category, transactions) =>
+                      val selectedTransactions =
+                        if (includeAllDetails || transactions.length < 1000)
+                          transactions.sortBy(_.startDate)
+                        else
+                          (transactions.takeRight(100) ++ transactions.filter(_.state == "BUSY")).sortBy(_.startDate)
+
+                      val numberOfTransactions = transactions.length
+                      val finishedTransactions = transactions.filter(_.state == "FINISHED")
+                      val averageFinishedTransactionDuration =
+                        if (finishedTransactions.length > 0)
+                          Utils.formatDuration(Utils.getDuration(finishedTransactions.map(tr => Utils.parseDuration(tr.duration)).sum / finishedTransactions.length))
+                        else
+                          "n/a"
+
+                      LogLineTransactionCategory(category, selectedTransactions, numberOfTransactions, transactions.head.startDate, averageFinishedTransactionDuration)
+                    }
+                    .toArray
+                    .sortBy(_.startDate)
+
+                  val dataHandlings = lines
+                    .filter { case (_, _, subject, _) => subject == "DATA" }
+                    .map { case (date, _, _, values) =>
+                      val storage = values(0)
+                      val rw = values(1)
+                      val tableName = values(2)
+                      (date, storage, rw, tableName, values.drop(3))
+                    }
+
+                  val dataReads = dataHandlings
+                    .filter { case (_, _, rw, _, _) => rw == "READ" }
+                    .map { case (date, storage, rw, tableName, values) =>
+
+                      val count = if (values.length > 0) values(0).toInt else -1
+                      LogLineDataRead(storage, tableName, count, dateFormat.format(date))
+                    }
+                    .sortBy(_.date)
+
+                  val dataWrites = dataHandlings
+                    .filter { case (_, _, rw, _, _) => rw == "WRITE" }
+                    .map { case (date, storage, rw, tableName, values) =>
+                      val countBefore = values(0).toInt
+                      val countAfter = values(1).toInt
+                      val countUpdated = if (values.length >= 3) values(2).toInt else -1
+
+                      LogLineDataWrite(storage, tableName, countBefore, countAfter, countUpdated, dateFormat.format(date))
+                    }
+                    .sortBy(_.date)
+
+                  val messages = lines
+                    .filter { case (_, _, subject, _) => subject == "MESSAGE" }
+                    .map { case (date, _, _, values) =>
+                      val category = values(0)
+                      val subject = values(1)
+                      val message = values(2)
+                      LogLineMessage(category, subject, message, dateFormat.format(date))
+                    }
+                    .sortBy(_.date)
+
+                  LogLineCalc(module, dateFormat.format(startDate), stopDate, duration, state, options, sparkAppId, jobs, transactionCategories, dataReads, dataWrites, messages)
                 }
-                .groupBy(_.category)
-                .mapValues(_.toArray)
-
-              val transactionCategories = categoriesWithTransactions
-                .map { case (category, transactions) =>
-                  val selectedTransactions =
-                    if (includeAllDetails || transactions.length < 1000)
-                      transactions.sortBy(_.startDate)
-                    else
-                      (transactions.takeRight(100) ++ transactions.filter(_.state == "BUSY")).sortBy(_.startDate)
-
-                  val numberOfTransactions = transactions.length
-                  val finishedTransactions = transactions.filter(_.state == "FINISHED")
-                  val averageFinishedTransactionDuration =
-                    if (finishedTransactions.length > 0)
-                      Utils.formatDuration(Utils.getDuration(finishedTransactions.map(tr => Utils.parseDuration(tr.duration)).sum / finishedTransactions.length))
-                    else
-                      "n/a"
-
-                  LogLineTransactionCategory(category, selectedTransactions, numberOfTransactions, averageFinishedTransactionDuration)
-                }
-                .toArray
-
-              val dataHandlings = lines
-                .filter { case (_, _, subject, _) => subject == "DATA" }
-                .map { case (date, _, _, values) =>
-                  val storage = values(0)
-                  val rw = values(1)
-                  val tableName = values(2)
-                  (date, storage, rw, tableName, values.drop(3))
-                }
-
-              val dataReads = dataHandlings
-                .filter { case (_, _, rw, _, _) => rw == "READ" }
-                .map { case (date, storage, rw, tableName, values) =>
-
-                  val count = if (values.length > 0) values(0).toInt else -1
-                  LogLineDataRead(storage, tableName, count, dateFormat.format(date))
-                }
-                .sortBy(_.date)
-
-              val dataWrites = dataHandlings
-                .filter { case (_, _, rw, _, _) => rw == "WRITE" }
-                .map { case (date, storage, rw, tableName, values) =>
-                  val countBefore = values(0).toInt
-                  val countAfter = values(1).toInt
-                  val countUpdated = if (values.length >= 3) values(2).toInt else -1
-
-                  LogLineDataWrite(storage, tableName, countBefore, countAfter, countUpdated, dateFormat.format(date))
-                }
-                .sortBy(_.date)
-
-              val messages = lines
-                .filter { case (_, _, subject, _) => subject == "MESSAGE" }
-                .map { case (date, _, _, values) =>
-                  val category = values(0)
-                  val subject = values(1)
-                  val message = values(2)
-                  LogLineMessage(category, subject, message, dateFormat.format(date))
-                }
-                .sortBy(_.date)
-
-              LogLineCalc(module, dateFormat.format(startDate), stopDate, duration, state, options, sparkAppId, jobs, transactionCategories, dataReads, dataWrites, messages)
             } match {
               case Failure(t) =>
                 logger.error(s"Error parsing log file module $module in log file dated ${dateFormat.format(fileDate)}", t)
                 None
               case Success(t) =>
-                Some(t)
+                t
             }
           }
           .toArray
@@ -260,7 +258,7 @@ class SparkLoggingController extends Controller with Secured {
         val sparkAppId = logLineCalcForWorkflowO.map(_.sparkAppId).getOrElse(logLineFirstCalc.sparkAppId)
 
         val options = logLineCalcForWorkflowO.map(_.options).getOrElse(logLineFirstCalc.options)
-        val message = options.find(_.head == "message").map(_.reverse.head).getOrElse("Workflow")
+        val message = options.find(_.head == "message").map(_.reverse.head).getOrElse("no message")
 
         val filteredLogLineCalcs = logLineCalcs.filterNot(calc => calc.module.startsWith("biz.meetmatch.workflow.")).filterNot(calc => calc.module == "WarmupZeppelin").filterNot(calc => calc.module == "Class.load").filterNot(calc => calc.module == "Class.save")
 
@@ -280,7 +278,7 @@ case class LogLineCalc(module: String, startDate: String, stopDate: Date, durati
 
 case class LogLineJob(id: Int, startDate: String, duration: String, state: String, description: String, stageCount: Int, executionId: Int = -1)
 
-case class LogLineTransactionCategory(category: String, transactions: Array[LogLineTransaction], numberOfTransactions: Int, averageFinishedTransactionDuration: String)
+case class LogLineTransactionCategory(category: String, transactions: Array[LogLineTransaction], numberOfTransactions: Int, startDate: String, averageFinishedTransactionDuration: String)
 
 case class LogLineTransaction(category: String, id: String, stageId: Int, partitionId: Int, taskId: Long, message: String, startDate: String, duration: String, state: String)
 
