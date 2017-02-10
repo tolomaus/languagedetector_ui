@@ -15,10 +15,6 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "com.typesafe.play" %% "play-slick" % "2.0.2"
 
-//nlp - stanford
-libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0"
-libraryDependencies += "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0" classifier "models"
-
 // language detection
 libraryDependencies += "com.optimaize.languagedetector" % "language-detector" % "0.6"
 
