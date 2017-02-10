@@ -32,6 +32,7 @@ class LanguageDetectionAnalyticsController @Inject() extends Controller with Sec
           .collect
           .map(convertRow)
           .toArray
+          .sortBy(_.count).reverse
 
         val labels = sentenceCountsByLanguage.map(_.language)
         val series = Array("sentence counts by language")
