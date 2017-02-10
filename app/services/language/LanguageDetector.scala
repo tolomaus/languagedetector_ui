@@ -1,4 +1,4 @@
-package services.pos
+package services.language
 
 import com.optimaize.langdetect.LanguageDetectorBuilder
 import com.optimaize.langdetect.ngram.NgramExtractors
