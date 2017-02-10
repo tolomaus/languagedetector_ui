@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('Dashboard.dataDependencies', ['chart.js'])
+angular.module('Dashboard.dataDependencies', [])
 
   .config(['$routeProvider', $routeProvider => {
     $routeProvider
@@ -34,18 +34,19 @@ angular.module('Dashboard.dataDependencies', ['chart.js'])
         autounselectify: true,
         layout: {
           name: 'dagre',
-          rankDir: 'RL'
+          rankDir: 'RL',
+          fit: false
         },
         style: [
           {
             selector: 'node',
             style: {
-              'width': '30',
-              'height': '30',
+              'width': '200',
+              'height': '200',
               'content': 'data(label)',
-              'font-size': 5,
+              'font-size': 30,
               'text-wrap': 'wrap',
-              'text-max-width': '18',
+              'text-max-width': '180',
               'color': 'lightgrey',
               'text-valign': 'center',
               'text-halign': 'center',
@@ -55,7 +56,7 @@ angular.module('Dashboard.dataDependencies', ['chart.js'])
           {
             selector: 'edge',
             style: {
-              'width': 3,
+              'width': 12,
               'target-arrow-shape': 'triangle',
               'line-color': '#9dbaea',
               'target-arrow-color': '#9dbaea',
@@ -65,6 +66,8 @@ angular.module('Dashboard.dataDependencies', ['chart.js'])
         ],
         elements: dataset
       });
+
+      cy.center()
     }
   }])
 
