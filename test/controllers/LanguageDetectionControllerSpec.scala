@@ -15,9 +15,9 @@ import test._
 class LanguageDetectionControllerSpec extends PlaySpec with OneAppPerTest {
   protected val logger = LoggerFactory.getLogger(this.getClass)
 
-  "CompanySearchController" should {
-    "find companies by search term" in {
-      val result = route(app, TestUtils.addCredentials(FakeRequest(GET, "/api/language-detection/abc"))).get
+  "LanguageDetectionController" should {
+    "detect language" in {
+      val result = route(app, TestUtils.addCredentials(FakeRequest(GET, "/api/language-detection?text=abc"))).get
 
       status(result) mustBe OK
       contentType(result) mustBe Some("application/json")

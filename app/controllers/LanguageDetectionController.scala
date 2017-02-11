@@ -17,7 +17,7 @@ class LanguageDetectionController @Inject()(languageDetector: LanguageDetector) 
   def detectLanguage(text: String): Action[AnyContent] =
     Authorized.async { request =>
       Future {
-        val sentences = text.split(".")
+        val sentences = text.split("\\.")
           .map(_.trim)
           .map(sentence => Sentence(sentence, languageDetector.detectLanguage(sentence)))
 
