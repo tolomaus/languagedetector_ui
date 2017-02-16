@@ -34,5 +34,5 @@ From a package:
 ```shell
 scripts/package_app.sh
 scripts/deploy_app.sh 1.0
-scripts/languagedetector_ui start # this script uses the settings from conf/test.conf
+scripts/languagedetector_ui_test_v10 start # this script uses the settings from conf/test.conf
 ```
