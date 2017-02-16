@@ -16,6 +16,8 @@ angular.module('Dashboard', [
   'Dashboard.sparkLogging'
 ])
   .config(['$locationProvider', '$routeProvider', '$httpProvider', ($locationProvider, $routeProvider, $httpProvider) => {
+    $locationProvider.hashPrefix('')
+
     $routeProvider
       .when('/', {redirectTo: '/menu'})
       .otherwise({redirectTo: '/'});

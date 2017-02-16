@@ -34,7 +34,7 @@ angular.module('Dashboard.dataDependencies', [])
         autounselectify: true,
         layout: {
           name: 'dagre',
-          rankDir: 'RL',
+          rankDir: 'LR',
           fit: false
         },
         style: [
