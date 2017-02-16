@@ -26,7 +26,6 @@ class SparkLoggingController extends Controller with Secured {
 
   def getBusinessLogs(mostRecent: Int = 10, includeAllDetails: Boolean = false): Action[AnyContent] =
     Authorized.async { request =>
-
       Future.successful(Ok(Json.toJson(getBusinessLogsImpl(mostRecent, includeAllDetails))).as(JSON))
     }
 
@@ -39,16 +38,17 @@ class SparkLoggingController extends Controller with Secured {
       .map(_.name)
       .flatMap { case n@regex() => Some(n) case _ => None }
       .map(path => (path, Source.fromFile(logFilePath + "/" + path).getLines.mkString("\n")))
+      .filter { case (path, content) => content.nonEmpty }
       .map { case (path, content) =>
         val pathDateFormat = new SimpleDateFormat("yyyyMMddHHmm")
         val fileDate = pathDateFormat.parse(path.split("_").last.replace(".log", ""))
-        (fileDate, content)
+        (path, fileDate, content)
       }
       .toArray
       .sortBy(_._1).reverse
       .zipWithIndex
-      .filter { case ((fileDate, content), index) => index <= mostRecent }
-      .map { case ((fileDate, content), index) =>
+      .filter { case ((path, fileDate, content), index) => index <= mostRecent }
+      .map { case ((path, fileDate, content), index) =>
         content
           .split("\n")
           .flatMap { line =>
@@ -61,7 +61,7 @@ class SparkLoggingController extends Controller with Secured {
               (date, module, subject, values.drop(3))
             } match {
               case Failure(t) =>
-                logger.error(s"Error parsing log file line '$line' in log file dated ${dateFormat.format(fileDate)}", t)
+                logger.error(s"Error parsing log file line '$line' in log file $path", t)
                 None
               case Success(t) =>
                 Some(t)
