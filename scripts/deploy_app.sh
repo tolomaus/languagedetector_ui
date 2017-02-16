@@ -13,5 +13,6 @@ fi
 echo "Deploying $APP_NAME $APP_VERSION to $APP_DIR..."
 mkdir -p ${APP_DIR}
 tar xvf $SOURCE_DIR/target/universal/$APP_NAME-$APP_VERSION.tgz -C ${APP_DIR}
+# note: in a real world scenario the package would be downloaded from a corporate repository instead of taking it from a local path
 
 echo "Done."
