@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-APP_NAME=languagedetector_ui
 
+##### this section is not meant to be modified
+APP_NAME=languagedetector_ui
 SOURCE_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-APP_DIR=~/apps/${APP_NAME}
+#####
+
+##### this section may be modified
+APP_DIR=~/my_workspace/apps/${APP_NAME}
+#####
+

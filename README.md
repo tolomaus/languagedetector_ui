@@ -24,15 +24,17 @@ nano settings.sh
 nano conf/test.conf
 ```
 
+If you haven't changed the settings in the two previous steps all files (binaries, data and logs) will be created under ~/my_workspace and may be deleted when you're done. 
+
 4] run the application:
 
 From source:
 ```shell
-scripts/sbt_run.sh # this script uses the settings from conf/test.conf
+scripts/sbt_run.sh test # this script uses the settings from conf/test.conf
 ```
-From a package:
+From a deployed package:
 ```shell
-scripts/package_app.sh
-scripts/deploy_app.sh 1.0
-scripts/languagedetector_ui_test_v10 start # this script uses the settings from conf/test.conf
+scripts/package_app.sh # the version is currently set to 1.0 in the build.sbt
+scripts/deploy_app.sh test 1.0 # deploy version 1.0 to the test environment
+scripts/languagedetector_ui_test start
 ```

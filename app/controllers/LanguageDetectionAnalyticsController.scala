@@ -24,7 +24,7 @@ class LanguageDetectionAnalyticsController @Inject() extends Controller with Sec
         implicit val configuration = new Configuration()
         implicit val fs = FileSystem.get(configuration)
 
-        val path = Utils.getConfig("spark.content") + "/parquet/SentenceCountsByLanguage/*"
+        val path = Utils.getConfig("languagedetector.dir") + "/data/parquet/SentenceCountsByLanguage/*"
         logger.info(s"Loading the sentence counts from file $path...")
 
         val sentenceCountsByLanguage = ParquetSource(new Path(path))
