@@ -4,6 +4,6 @@ set SOURCE_DIR=%~dp0
 rem #####
 
 rem ##### this section may be modified
-set APP_DIR=%CD%\my_workspace\apps\%APP_NAME%
+set APP_DIR=%HOMEPATH%\my_workspace\apps\%APP_NAME%
 rem #####
 
