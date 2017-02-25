@@ -12,7 +12,7 @@ angular.module('Dashboard', [
   'Dashboard.menu',
   'Dashboard.languageDetection',
   'Dashboard.languageDetectionAnalytics',
-  'Dashboard.dataDependencies',
+  'Dashboard.dataFlow',
   'Dashboard.sparkLogging'
 ])
   .config(['$locationProvider', '$routeProvider', '$httpProvider', ($locationProvider, $routeProvider, $httpProvider) => {

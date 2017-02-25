@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('Dashboard.dataDependencies', [])
+angular.module('Dashboard.dataFlow', [])
 
   .config(['$routeProvider', $routeProvider => {
     $routeProvider
-      .when('/data-dependencies', {
-        templateUrl: 'data-dependencies/template.html',
-        controller: 'dataDependenciesCtrl'
+      .when('/data-flow', {
+        templateUrl: 'data-flow/template.html',
+        controller: 'dataFlowCtrl'
       })
   }])
 
-  .controller('dataDependenciesCtrl', ['$scope', '$routeParams', '$q', '$http', '$location', '$cookies', function ($scope, $routeParams, $q, $http, $location, $cookies) {
+  .controller('dataFlowCtrl', ['$scope', '$routeParams', '$q', '$http', '$location', '$cookies', function ($scope, $routeParams, $q, $http, $location, $cookies) {
     $scope.status = ""
 
     $scope.role = $cookies.get("role")
@@ -18,7 +18,7 @@ angular.module('Dashboard.dataDependencies', [])
     $scope.loading = true;
     $scope.status = ""
 
-    $http.get("/api/data-dependencies")
+    $http.get("/api/data-flow")
       .then(response => {
         showGraph(response.data)
       }, response => {
