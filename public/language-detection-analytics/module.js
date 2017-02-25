@@ -31,6 +31,16 @@ angular.module('Dashboard.languageDetectionAnalytics', ['chart.js'])
       $scope.labels = dataset.labels //['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
       $scope.series = dataset.series // ['Series A', 'Series B'];
       $scope.data = dataset.data
+      $scope.options = {legend: {display: true}}
+      $scope.colors = [
+        '#97BBCD', // blue
+        '#F7464A', // red
+        '#DCDCDC', // light grey
+        '#46BFBD', // green
+        '#FDB45C', // yellow
+        '#949FB1', // grey
+        '#4D5360'  // dark grey
+      ]
     }
   }])
 

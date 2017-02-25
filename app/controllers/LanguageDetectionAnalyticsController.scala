@@ -4,7 +4,7 @@ import javax.inject.{Inject, Singleton}
 
 import io.eels.Row
 import io.eels.component.parquet.ParquetSource
-import model.SentenceCountByLanguage
+import model.{SentenceCountByLanguage, WrongDetectionByLanguage}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import play.api.libs.json.Json
@@ -21,33 +21,44 @@ class LanguageDetectionAnalyticsController @Inject() extends Controller with Sec
   def getDataset: Action[AnyContent] =
     Authorized.async { request =>
       Future {
-        implicit val configuration = new Configuration()
-        implicit val fs = FileSystem.get(configuration)
-
-        val path = Utils.getConfig("languagedetector.dir") + "/data/parquet/SentenceCountsByLanguage/*"
+        val path = Utils.getConfig("languagedetector.dir") + "/data/parquet"
         logger.info(s"Loading the sentence counts from file $path...")
+        val sentenceCounts = readParquet(s"$path/SentenceCountsByLanguage/*", convertToSentenceCount).sortBy(_.detectedLanguage)
 
-        val sentenceCountsByLanguage = ParquetSource(new Path(path))
-          .toFrame
-          .collect
-          .map(convertRow)
-          .toArray
-          .sortBy(_.count).reverse
+        logger.info(s"Loading the wrong detections from file $path...")
+        val wrongDetections = readParquet(s"$path/WrongDetectionsByLanguage/*", convertToWrongDetection).sortBy(_.detectedLanguage)
 
-        val labels = sentenceCountsByLanguage.map(_.language)
-        val series = Array("sentence counts by language")
-        val data = Array(sentenceCountsByLanguage.map(_.count))
-
+        val labels = sentenceCounts.map(_.detectedLanguage)
+        val series = Array("sentence counts", "wrong detections")
+        val data = Array(sentenceCounts.map(_.count), wrongDetections.map(_.count))
 
         Ok(Json.toJson(Dataset(labels, series, data))).as(JSON)
       }
     }
 
-  private def convertRow(row: Row): SentenceCountByLanguage = {
+  private def readParquet[T](path: String, rowConverter: Row => T) = {
+    implicit val configuration = new Configuration()
+    implicit val fs = FileSystem.get(configuration)
+
+    ParquetSource(new Path(path))
+      .toFrame
+      .collect
+      .map(convertToWrongDetection)
+      .toArray
+  }
+
+  private def convertToSentenceCount(row: Row): SentenceCountByLanguage = {
     val language = row.values(0).asInstanceOf[String]
     val count = row.values(1).asInstanceOf[Long]
 
     SentenceCountByLanguage(language, count)
+  }
+
+  private def convertToWrongDetection(row: Row): WrongDetectionByLanguage = {
+    val language = row.values(0).asInstanceOf[String]
+    val count = row.values(1).asInstanceOf[Long]
+
+    WrongDetectionByLanguage(language, count)
   }
 }
 

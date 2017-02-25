@@ -1,3 +1,3 @@
 package model
 
-case class SentenceCountByLanguage(language: String, count: Long)
+case class SentenceCountByLanguage(detectedLanguage: String, count: Long)
