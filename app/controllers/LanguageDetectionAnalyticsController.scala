@@ -26,11 +26,17 @@ class LanguageDetectionAnalyticsController @Inject() extends Controller with Sec
         val sentenceCounts = readParquet(s"$path/SentenceCountsByLanguage/*", convertToSentenceCount).sortBy(_.detectedLanguage)
 
         logger.info(s"Loading the wrong detections from file $path...")
-        val wrongDetections = readParquet(s"$path/WrongDetectionsByLanguage/*", convertToWrongDetection).sortBy(_.detectedLanguage)
+        val nonZeroWrongDetections = readParquet(s"$path/WrongDetectionsByLanguage/*", convertToWrongDetection)
+        val wrongDetections = sentenceCounts.map { sc =>
+          nonZeroWrongDetections
+            .find(_.detectedLanguage == sc.detectedLanguage)
+            .map(_.count)
+            .getOrElse(0.toLong)
+        }
 
         val labels = sentenceCounts.map(_.detectedLanguage)
         val series = Array("sentence counts", "wrong detections")
-        val data = Array(sentenceCounts.map(_.count), wrongDetections.map(_.count))
+        val data = Array(sentenceCounts.map(_.count), wrongDetections)
 
         Ok(Json.toJson(Dataset(labels, series, data))).as(JSON)
       }
