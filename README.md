@@ -8,6 +8,8 @@ load parquet file
 
 ## quick start
 ### installation and configuration
+0] make sure you have jdk 1.8, sbt and git installed
+
 1] clone this repo
 ```shell
 git clone https://github.com/tolomaus/languagedetector_ui.git
