@@ -85,7 +85,7 @@ class SparkLoggingController extends Controller with Secured {
                     .split(",")
                     .filterNot(_.isEmpty)
                     .map { option =>
-                      val options = option.split("=")
+                      val options = option.split("=").map(_.trim)
                       Array(options.head, options.drop(1).mkString("="))
                     }
 
@@ -260,7 +260,7 @@ class SparkLoggingController extends Controller with Secured {
         val options = logLineCalcForWorkflowO.map(_.options).getOrElse(logLineFirstCalc.options)
         val message = options.find(_.head == "message").map(_.reverse.head).getOrElse("no message")
 
-        val filteredLogLineCalcs = logLineCalcs.filterNot(calc => calc.module.startsWith("biz.meetmatch.workflow.")).filterNot(calc => calc.module.startsWith("biz.meetmatch.modules.util.")).filterNot(calc => calc.module == "Class.load").filterNot(calc => calc.module == "Class.save")
+        val filteredLogLineCalcs = logLineCalcs.filterNot(calc => calc.module.startsWith("biz.meetmatch.workflow.")).filterNot(calc => calc.module.startsWith("util.")).filterNot(calc => calc.module == "Class.load").filterNot(calc => calc.module == "Class.save")
 
         val warnings = filteredLogLineCalcs.map(_.messages.count(_.category == "WARN")).sum
         val errors = filteredLogLineCalcs.map(_.messages.count(_.category == "ERROR")).sum
