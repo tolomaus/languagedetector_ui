@@ -79,14 +79,14 @@ COMMAND=$1
 ENV=test
 PORT=9001
 
-APP_NAME_DIR=${APP_DIR}/${APP_NAME}
+APP_NAME_DIR=${APP_DIR}/${ENV}/${APP_NAME}
 APP_CONFIG=${APP_NAME_DIR}/conf/${ENV}.conf
 TEST_WEBSITE_URL="https://localhost:${PORT}"
 # ***********************************************
 # ***********************************************
 
 # Additional arguments to be passed to the Play application
-APP_ARGS="-J-Xmx8g -J-Xms8g -Dhttp.port=disabled -Dhttps.port=${PORT} -Dconfig.file=${APP_CONFIG} -Djava.util.logging.config.file=${APP_NAME_DIR}/conf/logging.properties"
+APP_ARGS="-J-Xmx2g -J-Xms2g -Dhttp.port=disabled -Dhttps.port=${PORT} -Dconfig.file=${APP_CONFIG} -Djava.util.logging.config.file=${APP_NAME_DIR}/conf/logging.properties"
 
 # Path to the RUNNING_PID file containing process ID
 PID_FILE=$APP_NAME_DIR/RUNNING_PID
