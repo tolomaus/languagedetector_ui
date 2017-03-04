@@ -7,35 +7,35 @@ load parquet file
 
 
 ## quick start
-### installation and configuration
+### setup
 0] make sure you have jdk 1.8, sbt and git installed
 
 1] clone this repo
-```shell
+```bash
 git clone https://github.com/tolomaus/languagedetector_ui.git
 cd languagedetector_ui
 ```
 
 2] (optional) modify the environment variables from [settings.sh](https://github.com/tolomaus/languagedetector_ui/tree/master/settings.sh) to your needs
-```shell
+```bash
 nano settings.sh
 ```
 
 3] (optional) modify the environment specific test.conf file to your needs:
-```shell
+```bash
 nano conf/test.conf
 ```
 
 If you haven't changed the settings in the two previous steps all files (binaries, data and logs) will be created under ~/my_workspace and may be deleted when you're done. 
 
-4] run the application:
 
+### usage
 From source:
-```shell
+```bash
 scripts/sbt_run.sh test # this script uses the settings from conf/test.conf
 ```
 From a deployed package:
-```shell
+```bash
 scripts/package_app.sh # the version is currently set to 1.0 in the build.sbt
 scripts/deploy_app.sh test 1.0 # deploy version 1.0 to the test environment
 scripts/languagedetector_ui_test start
