@@ -25,13 +25,13 @@ nano settings.sh
 start notepad settings.bat
 ```
 
-3] (optional) modify the environment specific test.conf file to your needs:
+3] modify the environment specific test.conf file to your needs:
 ```bash
 # mac/linux
 nano conf/test.conf
 
 # windows
-start notepad conf/test.conf
+start notepad conf/test.conf # change ${HOME} to ${HOMEPATH}
 ```
 
 If you haven't changed the settings in the two previous steps all files (binaries, data and logs) will be created under ~/my_workspace and may be deleted when you're done. 
