@@ -44,7 +44,7 @@ If you haven't changed the settings in the two previous steps all files (binarie
 scripts/sbt_run.sh test # this script uses the settings from conf/test.conf
 
 # windows
-scripts/sbt_run.bat test # this script uses the settings from conf/test.conf
+scripts\sbt_run.bat test # this script uses the settings from conf/test.conf
 ```
 
 Navigate to [https://localhost:9000](https://localhost:9000)
@@ -57,8 +57,8 @@ scripts/deploy_app.sh test 1.0 # deploy version 1.0 to the test environment
 scripts/languagedetector_ui_test start
 
 # windows
-scripts/package_app.bat # the version is currently set to 1.0 in the build.sbt
-scripts/deploy_app.bat test 1.0 # deploy version 1.0 to the test environment
+scripts\package_app.bat # the version is currently set to 1.0 in the build.sbt
+scripts\deploy_app.bat test 1.0 # deploy version 1.0 to the test environment
 ```
 
 Navigate to [https://localhost:9001](https://localhost:9001)
