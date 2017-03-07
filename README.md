@@ -59,4 +59,4 @@ scripts/package_app.bat # the version is currently set to 1.0 in the build.sbt
 scripts/deploy_app.bat test 1.0 # deploy version 1.0 to the test environment
 ```
 
-Now navigate to https://localhost:9000
+Now navigate to [https://localhost:9000](https://localhost:9000)
