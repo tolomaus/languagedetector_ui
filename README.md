@@ -38,7 +38,7 @@ If you haven't changed the settings in the two previous steps all files (binarie
 
 
 ### usage
-From source:
+##### from source:
 ```bash
 # mac/linux
 scripts/sbt_run.sh test # this script uses the settings from conf/test.conf
@@ -47,7 +47,9 @@ scripts/sbt_run.sh test # this script uses the settings from conf/test.conf
 scripts/sbt_run.bat test # this script uses the settings from conf/test.conf
 ```
 
-From a deployed package:
+Navigate to [https://localhost:9000](https://localhost:9000)
+
+##### from a deployed package:
 ```bash
 # mac/linux
 scripts/package_app.sh # the version is currently set to 1.0 in the build.sbt
@@ -59,4 +61,4 @@ scripts/package_app.bat # the version is currently set to 1.0 in the build.sbt
 scripts/deploy_app.bat test 1.0 # deploy version 1.0 to the test environment
 ```
 
-Now navigate to [https://localhost:9000](https://localhost:9000)
+Navigate to [https://localhost:9001](https://localhost:9001)
